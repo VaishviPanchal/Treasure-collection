@@ -1,7 +1,7 @@
-var path,boy,cash,diamonds,jwellery,sword;
-var pathImg,boyImg,cashImg,diamondsImg,jwelleryImg,swordImg,endImg;
+var path,boy,cash,diamonds,jwellery,sword,hurdle,select;
+var pathImg,boyImg,cashImg,diamondsImg,jwelleryImg,swordImg,endImg,hurdleImg;
 var treasureCollection = 0;
-var cashG,diamondsG,jwelleryG,swordGroup;
+var cashG,diamondsG,jwelleryG,swordGroup,hurdleG;
 var PLAY=1;
 var END=0;
 var gameState=1;
@@ -12,6 +12,7 @@ function preload(){
   cashImg = loadImage("cash.png");
   diamondsImg = loadImage("diamonds.png");
   jwelleryImg = loadImage("jwell.png");
+  hurdleImg = loadImage("hurdle.png")
   swordImg = loadImage("sword.png");
   endImg =loadAnimation("gameOver.png");
 }
@@ -34,6 +35,7 @@ function setup(){
   cashG=new Group();
   diamondsG=new Group();
   jwelleryG=new Group();
+  hurdleG=new Group();
   swordGroup=new Group();
 
 }
@@ -51,10 +53,19 @@ function draw() {
   boy.collide(edges);
   boy.setCollider("circle",0,0,550);
  
-  createCash();
-  createDiamonds();
-  createJwellery();
-  createSword();
+  select=Math.round(random(1,5));
+  if(select===1){
+    createCash();
+  }else if(select===2){
+    createDiamonds();
+  }else if (select===3){
+    createJwellery();
+  }else if(select===4){
+    createHurdle();
+  }else if(select===5){
+    createSword();
+  }
+ 
   destroy();
   
      
@@ -69,12 +80,14 @@ function draw() {
     cashG.setVelocityYEach(0);
     diamondsG.setVelocityYEach(0);
     jwelleryG.setVelocityYEach(0);
+    hurdleG.setVelocityYEach(0);
     swordGroup.setVelocityYEach(0);
     
     swordGroup.destroyEach();
     cashG.destroyEach();
     jwelleryG.destroyEach();
     diamondsG.destroyEach();
+    hurdleG.destroyEach();
     
     boy.addAnimation("SahilRunning",endImg);
     boy.scale=0.9;
@@ -92,7 +105,7 @@ function draw() {
 }
 
 function createCash() {
-  if (World.frameCount % 50 == 0) {
+  if (World.frameCount % 80 == 0) {
   var cash = createSprite(Math.round(random(50, 350),40, 10, 10));
   cash.addImage(cashImg);
   cash.scale=0.12;
@@ -125,13 +138,25 @@ function createJwellery() {
 }
 
 function createSword(){
-  if (World.frameCount % 150 == 0) {
+  if (World.frameCount % 80 == 0) {
   var sword = createSprite(Math.round(random(50, 350),40, 10, 10));
   sword.addImage(swordImg);
   sword.scale=0.1;
   sword.velocityY = 3;
   sword.lifetime = 150;
   swordGroup.add(sword);
+  }
+}
+
+function createHurdle(){
+  if (World.frameCount % 80 == 0){
+    var hurdle = createSprite(Math.round(random(50,350),40,10,10));
+    hurdle.addImage(hurdleImg);
+    hurdle.scale=0.3;
+    hurdle.velocityY = 3;
+    hurdle.lifetime = 150;
+    hurdleG.add(hurdle);
+
   }
 }
 
@@ -150,7 +175,7 @@ function destroy(){
       treasureCollection=treasureCollection+40
       
     }else{
-      if(swordGroup.isTouching(boy)) {
+      if(swordGroup.isTouching(boy)||hurdleG.isTouching(boy)) {
         gameState = END;
     }
   }
